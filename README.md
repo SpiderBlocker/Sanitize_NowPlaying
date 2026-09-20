@@ -12,7 +12,7 @@ This project was created through iterative co-development with ChatGPT 5.2 / 5.5
 - Low-overhead event-driven monitoring of `nowplaying.txt` from playout software such as RadioBOSS, with immediate wake-up on input changes
 - Optimized startup path with reduced native-helper and console initialization overhead
 - Intelligent artist/title cleanup (encoders, bitrates, countries, platform tags, duplicate information, etc.)
-- Smart handling of brackets, “feat.” and other common metadata noise
+- Smart handling of brackets, including removal of unmatched or mismatched `()`, `[]` and `{}` pairs, plus “feat.” and other common metadata noise
 - Ready-to-use compact RT and RT+ output files
 - Separate PREFIX, ARTIST, CONNECTOR and TITLE files for flexible composition in Stereo Tool or another RDS encoder
 - Independent adaptive 64-character processing for the ARTIST and TITLE component files

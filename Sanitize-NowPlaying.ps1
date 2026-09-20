@@ -631,7 +631,7 @@ namespace Win {
 try { [NativeExitFlush]::Install() } catch { }
 
 $ScriptTitle   = "Sanitize NowPlaying for Stereo Tool"
-$ScriptVersion = "2.1.7"
+$ScriptVersion = "2.1.8"
 
 # -------------------------------------------------------------------------------------------------
 # UI configuration
@@ -5996,6 +5996,60 @@ function Cleanup-Whitespace([string]$s) {
     return [regex]::Replace($s, "\s+", " ")
 }
 
+function Remove-UnmatchedBrackets([string]$s) {
+    if ([string]::IsNullOrEmpty($s)) { return "" }
+
+    # Remove only genuinely unmatched (), [] and {} while preserving every valid pair,
+    # including correctly nested mixed pairs. Never invent a missing bracket: uncertain
+    # metadata is repaired by deleting only the orphan/mismatched bracket character.
+    $indexStack = New-Object 'System.Collections.Generic.Stack[int]'
+    $charStack  = New-Object 'System.Collections.Generic.Stack[char]'
+    $remove     = New-Object 'System.Collections.Generic.HashSet[int]'
+
+    for ($i = 0; $i -lt $s.Length; $i++) {
+        $ch = $s[$i]
+
+        if (($ch -eq '(') -or ($ch -eq '[') -or ($ch -eq '{')) {
+            $indexStack.Push($i)
+            $charStack.Push($ch)
+            continue
+        }
+
+        if (($ch -eq ')') -or ($ch -eq ']') -or ($ch -eq '}')) {
+            $matchesTop = $false
+            if ($charStack.Count -gt 0) {
+                $open = $charStack.Peek()
+                $matchesTop = (($open -eq '(' -and $ch -eq ')') -or
+                               ($open -eq '[' -and $ch -eq ']') -or
+                               ($open -eq '{' -and $ch -eq '}'))
+            }
+
+            if ($matchesTop) {
+                [void]$charStack.Pop()
+                [void]$indexStack.Pop()
+            } else {
+                [void]$remove.Add($i)
+            }
+        }
+    }
+
+    # Any opener still on the stack has no valid closing partner.
+    while ($indexStack.Count -gt 0) {
+        [void]$remove.Add($indexStack.Pop())
+        [void]$charStack.Pop()
+    }
+
+    # Fast no-op path: leave already-valid metadata byte-for-byte untouched.
+    if ($remove.Count -eq 0) { return $s }
+
+    $sb = New-Object System.Text.StringBuilder
+    for ($i = 0; $i -lt $s.Length; $i++) {
+        if (-not $remove.Contains($i)) { [void]$sb.Append($s[$i]) }
+    }
+
+    return (Cleanup-Whitespace $sb.ToString())
+}
+
 function Ensure-TrailingSpace([string]$s) {
     if ([string]::IsNullOrWhiteSpace($s)) { return "" }
 
@@ -8249,11 +8303,13 @@ function Get-TruncatedVisibleArtistTitleParts([string]$artist, [string]$title) {
 
     if (-not (Has-LettersOrDigits $a)) {
         $visibleTitle = Smart-Truncate-Fields '' $t $MaxLen $OutJoin
-        return [pscustomobject]@{ Artist = ''; Title = (Cleanup-Whitespace $visibleTitle) }
+        $visibleTitle = Remove-UnmatchedBrackets (Cleanup-Whitespace $visibleTitle)
+        return [pscustomobject]@{ Artist = ''; Title = $visibleTitle }
     }
     if (-not (Has-LettersOrDigits $t)) {
         $visibleArtist = Smart-Truncate-Fields $a '' $MaxLen $OutJoin
-        return [pscustomobject]@{ Artist = (Cleanup-Whitespace $visibleArtist); Title = '' }
+        $visibleArtist = Remove-UnmatchedBrackets (Cleanup-Whitespace $visibleArtist)
+        return [pscustomobject]@{ Artist = $visibleArtist; Title = '' }
     }
 
     # Keep Smart-Truncate-Fields artist/title semantics independent from display order. Replace only
@@ -8270,12 +8326,13 @@ function Get-TruncatedVisibleArtistTitleParts([string]$artist, [string]$title) {
         # Under extreme length pressure the established truncation policy can drop the second field.
         # Remove any partial private-use marker before returning the surviving artist text.
         $visibleArtist = Cleanup-Whitespace ($marked.Replace([string][char]0xE000, ''))
+        $visibleArtist = Remove-UnmatchedBrackets $visibleArtist
         return [pscustomobject]@{ Artist = $visibleArtist; Title = '' }
     }
 
     return [pscustomobject]@{
-        Artist = Cleanup-Whitespace ($marked.Substring(0, $markerPos))
-        Title  = Cleanup-Whitespace ($marked.Substring($markerPos + $marker.Length))
+        Artist = Remove-UnmatchedBrackets (Cleanup-Whitespace ($marked.Substring(0, $markerPos)))
+        Title  = Remove-UnmatchedBrackets (Cleanup-Whitespace ($marked.Substring($markerPos + $marker.Length)))
     }
 }
 
@@ -8685,6 +8742,13 @@ function Normalize-NowPlayingParts([string]$raw) {
 
     # Artist may be empty (title-only).
     if ([string]::IsNullOrWhiteSpace($artist)) { $artist = "" }
+
+    # ARTIST and TITLE are independent metadata fields. Do not allow (), [] or {}
+    # to remain open across the field boundary (or vice versa); remove orphan/mismatched brackets
+    # only after all semantic cleanup so existing recognition rules remain unaffected.
+    $artist = Remove-UnmatchedBrackets $artist
+    $title2 = Remove-UnmatchedBrackets $title2
+
     return [pscustomobject]@{ Artist = $artist; Title = $title2 }
 }
 
@@ -8978,6 +9042,12 @@ function Compose-OutputsFromRaw([string]$raw) {
     }
 
     if ($rt.Length -gt $MaxLen) { $rt = (Cleanup-Whitespace (Limit-TextLength $rt $MaxLen)).Trim() }
+
+    # Final invariant guards: standalone truncation and the last RT hard-limit may themselves
+    # cut through a valid bracket pair. Re-apply the orphan-only repair after those length operations.
+    $artistOut = Remove-UnmatchedBrackets $artistOut
+    $titleOut  = Remove-UnmatchedBrackets $titleOut
+    $rt        = Remove-UnmatchedBrackets $rt
 
     $prefixOut    = Get-EffectivePrefixOutput
     $connectorOut = ''
