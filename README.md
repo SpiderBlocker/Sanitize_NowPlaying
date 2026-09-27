@@ -1,130 +1,143 @@
-# Sanitize NowPlaying for Stereo Tool
+# Sanitize NowPlaying
 
-Lightweight PowerShell tool that monitors and normalizes `nowplaying.txt` metadata into six clean output files for reliable RDS RadioText (RT and RT+) and flexible Stereo Tool workflows.
+**Current release: v3.0.0**
 
-Designed for small and semi-professional FM stations that want clean, broadcast-ready RDS metadata with minimal manual library tagging.
+Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing, and optimization.
+Sanitize NowPlaying v3.0.0 is the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite, while deliberately preserving the established v2.1.8 processing behaviour, settings compatibility and six-file output contract.
+
+Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
+
+This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
 
 
-# Features
+# Highlights in v3.0.0
 
-- Low-overhead event-driven monitoring of `nowplaying.txt` from playout software such as RadioBOSS, with immediate wake-up on input changes
-- Optimized startup path with reduced native-helper and console initialization overhead
-- Intelligent artist/title cleanup (encoders, bitrates, countries, platform tags, duplicate information, etc.)
-- Smart handling of brackets, including removal of unmatched or mismatched `()`, `[]` and `{}` pairs, plus “feat.” and other common metadata noise
-- Ready-to-use compact RT and RT+ output files
-- Separate PREFIX, ARTIST, CONNECTOR and TITLE files for flexible composition in Stereo Tool or another RDS encoder
-- Independent adaptive 64-character processing for the ARTIST and TITLE component files
-- Adaptive trimming of combined RT/RT+ content to the RDS 64-character limit
-- Configurable artist/title order for the combined RT/RT+ outputs and for the ARTIST/CONNECTOR/TITLE row order in the FILES and CONTENT blocks, plus multilingual or custom prefix text, connector text and playout delimiter
+- Standalone **WinForms application** for Windows 10 and Windows 11
+- No PowerShell, console host or Windows Terminal required at runtime
+- First-run Working Directory setup with integrated folder and volume picker
+- Configurable input filename; `nowplaying.txt` remains the default
+- Low-overhead hybrid input monitoring with immediate wake-up on metadata changes
+- Automatic handling of temporarily unavailable mapped drives and UNC Working Directories
+- Clear `EMPTY`, `MISSING`, `EXPIRED`, `OFFLINE` / unavailable and invalid-input states
+- Transactional in-app **F10 Settings** UI with draggable nested overlays
+- Atomic settings saves and verified single-worker runtime handover
+- Per-file atomic output writes with retry protection
+- Startup freshness checks and output clearing on shutdown to prevent stale RDS data
+- Single-instance protection
+- In-app About panel and polished graphical status presentation
+
+
+# Metadata processing
+
+- Intelligent artist/title cleanup for encoders, bitrates, country/year suffixes, platform tags, duplicate information and other common library noise
+- Conservative artist/title splitting
+- Balanced bracket handling for `()`, `[]` and `{}`, including cleanup of unmatched or mismatched brackets
+- Configurable artist/title order for compact RT/RT+ presentation
+- Multilingual or custom prefix text
+- Configurable connector text
+- Configurable playout delimiter, including U+241F, TAB and custom values
 - Optional Greek/Cyrillic transliteration and ASCII-safe mode
-- Redesigned color console UI separating LOCATION, FILES, CONTENT and LAST UPDATE information, with smooth live status updates around open F10 overlays
-- Per-file output status, atomic writes, visible `WRITE FAILED` reporting and automatic retries
-- Startup freshness handling and automatic output flush on exit to prevent stale RDS data
-- Persistent JSON configuration and single-instance protection
-- Runs on Windows 10/11 as a PowerShell script or standalone `.exe`
+- Independent 64-character artist/title component limits
+- Adaptive trimming of combined RT/RT+ content to the RDS 64-character limit
+- Strengthened partial-write handling for playout applications that write artist and title in separate steps
 
 
 # Output files
 
-All output files are written as UTF-8 without BOM in the selected working directory.
+All output files are written as UTF-8 without BOM in the selected Working Directory and are replaced atomically.
 
 | File | Contents |
 | --- | --- |
 | `prefix.txt` | Selected multilingual prefix or custom prefix text, or empty |
 | `artist.txt` | Sanitized artist, independently limited to 64 characters, or empty |
-| `connector.txt` | Configured connector with surrounding spaces when both artist and title are present, or empty |
+| `connector.txt` | Configured connector when both artist and title are present, or empty |
 | `title.txt` | Sanitized title, independently limited to 64 characters, or empty |
 | `nowplaying_rt.txt` | Compact combined RadioText in the configured artist/title order, or empty |
-| `nowplaying_rtplus.txt` | Compact RT+ tagged text in the same configured order, or empty |
+| `nowplaying_rtplus.txt` | Compact RT+ output in the selected target syntax, or empty |
 
-The component files can be read separately when Stereo Tool should assemble the on-air text itself. The RT and RT+ files remain ready-made outputs for a simpler setup.
+For `nowplaying_rtplus.txt`, **Stereo Tool** is the backward-compatible default. **Magic RDS 4** can be selected as an alternative RT+ output target.
 
-The **Artist/title order** setting controls the combined `COMPACT RT` and `COMPACT RT+` outputs and also the presentation order of the ARTIST, CONNECTOR and TITLE rows in the console **FILES** and **CONTENT** blocks. The component files themselves keep fixed semantic identities: `artist.txt` always contains the artist, `connector.txt` the connector and `title.txt` the title.
+The component files keep fixed semantic identities: `artist.txt` always contains the artist, `connector.txt` the connector and `title.txt` the title. The **Artist/title order** setting changes presentation order, not file identity.
 
 
-# Usage
+# Requirements
 
-Save the standalone `.exe` (included in `Sanitize-NowPlaying.zip`) to any directory with write permissions and run it from there. The application stores its JSON settings file in the same location. No PowerShell configuration is required.
+- Windows 10 or Windows 11
+- .NET Framework 4.8
 
-When running on Windows 11, the application may open inside Windows Terminal tabs.  
-For best compatibility, it is recommended to run it using the classic console host (`conhost.exe`). Create a shortcut and set the target to:
+The application is built as AnyCPU.
 
-    conhost.exe "<full-path>\Sanitize-NowPlaying.exe"
+`Sanitize-NowPlaying.settings.json` is stored next to `SanitizeNowPlaying.exe`, so run the application from a directory in which the current user has write permission.
 
-Example:
 
-    conhost.exe "C:\RDS\Sanitize-NowPlaying.exe"
+# Quick start
 
-<br>
+1. Download the current `Sanitize-NowPlaying.zip`.
+2. Extract it to a writable folder.
+3. Run `SanitizeNowPlaying.exe`.
+4. On first start, select the Working Directory used by your playout software.
+5. Configure the playout application to write artist/title metadata to the selected input file. The default filename is `nowplaying.txt`.
+6. Open **F10 Settings** when you want to change the Working Directory, input filename, prefix, artist/title order, connector, ASCII/transliteration behaviour, delimiter or RT+ output target.
+7. Configure Stereo Tool, Magic RDS 4 or another RDS application to read the ready-made RT/RT+ file or the separate component files required by your workflow.
 
-Alternatively, you can run the script from a command prompt:
+When using the recommended U+241F separator, a typical playout metadata format is:
 
-    PowerShell -NoProfile -ExecutionPolicy Bypass -File .\sanitize-nowplaying.ps1
-
-You may first have to allow local scripts (one-time step):
-
-    PowerShell Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-<br>
-
-In your playout software, configure `nowplaying.txt` to be written to the selected working directory (for example `C:\RDS`).
-
-Ensure that the field delimiter used between `%artist` and `%title` matches the delimiter configured under **Playout delimiter** in the F10 settings menu. The selected delimiter is automatically copied to the clipboard for convenience. For example, when the recommended `␟` character is used, the metadata setting in the playout software should be:
-
-    "%artist␟%title"
-
-Use the F10 menu to configure the working directory, prefix text, artist/title order for the combined RT/RT+ outputs and matching console component-row order, connector text, ASCII-safe mode, Greek/Cyrillic transliteration and playout delimiter.
-
-Input monitoring remains active while F10 and its submenus are open. Visible status/content areas outside the active overlay continue to reflect input availability and current metadata state.
-
-Then configure Stereo Tool (or another RDS encoder) to read either the ready-made RT/RT+ files or the separate component files required by your workflow.
+    %artist␟%title
 
 
 # Stereo Tool component example
 
-The separate component files can be combined as an alternating RadioText sequence in Stereo Tool. The following example can be used as a starting point:
+The separate component files can be combined as an alternating RadioText sequence in Stereo Tool. For example:
 
     5s:\r"C:\RDS\prefix.txt"/10s:\+AR\r"C:\RDS\artist.txt"\-/5s:\r"C:\RDS\connector.txt"/10s:\+TI\r"C:\RDS\title.txt"\-
 
-This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ artist tag, the connector for 5 seconds, and the title for 10 seconds with an RT+ title tag. Adjust the timings, paths and order to suit your own RDS presentation.
+This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ artist tag, the connector for 5 seconds, and the title for 10 seconds with an RT+ title tag.
 
-**Synchronization note:** Stereo Tool reads each referenced component file only when that particular section becomes active, rather than caching all files at the start of the sequence. If the song changes during the sequence, artist and title components from two adjacent songs can therefore be combined. The sanitizer replaces each individual file atomically, but cannot make several separately read files act as one shared snapshot. Use the ready-made RT/RT+ files when guaranteed artist/title consistency is more important than separate component rotation.
+**Synchronization note:** Stereo Tool reads each referenced component file when that section becomes active rather than taking one shared snapshot of all component files. If metadata changes mid-sequence, components from adjacent songs can therefore be mixed. Use the ready-made `nowplaying_rt.txt` / `nowplaying_rtplus.txt` output when guaranteed artist/title consistency is more important than separate component rotation.
 
 
-# Example screenshots
+# Release lineage
 
-![UI example](images/ex01.png)
+**v3.0.0** is intentionally a continuation of the existing project rather than a separate product. It replaces the PowerShell/conhost implementation with a native WinForms UI and a new C# runtime, while preserving the established behaviour and interfaces that were regression-tested against **v2.1.8**.
 
-![UI example](images/ex02.png)
+For users of v2.1.8, the important continuity points are:
 
-![UI example](images/ex03.png)
+- existing settings schema retained;
+- existing output filenames retained;
+- processing behaviour parity-tested against v2.1.8;
+- `nowplaying.txt` remains the default input filename;
+- Stereo Tool remains the default RT+ output target.
 
-![UI example](images/ex04.png)
+Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed.
 
-![UI example](images/ex05.png)
 
-![UI example](images/ex06.png)
+# License
 
-![UI example](images/ex07.png)
+Sanitize NowPlaying **v3.0.0 and later** is distributed under the proprietary Sanitize NowPlaying license included with the release package.
 
-![UI example](images/ex08.png)
+The v3 executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms. The complete, unmodified official binary package may also be redistributed subject to the license conditions.
 
-![UI example](images/ex09.png)
+**Legacy note:** Sanitize NowPlaying **v2.x** was previously released under GNU GPLv3. Those historical v2.x releases remain under GPLv3; the v3 license does not revoke or alter rights already granted for them.
 
-![UI example](images/ex10.png)
+The v3 source code is not publicly distributed.
 
-![UI example](images/ex11.png)
 
-![UI example](images/ex12.png)
+# Verification
 
-![UI example](images/ex13.png)
 
-![UI example](images/ex14.png)
+Before release, v3.0.0 passed the complete automated verification chain:
 
-![UI example](images/ex15.png)
+- 45 processing-engine self-tests;
+- 36 parity cases × 6 output fields against the v2.1.8 processing reference;
+- 30 runtime/settings/file-I/O tests;
+- 9 application-state regression tests;
+- 22 settings/overlay regression tests;
+- 25 picker/network/burn-in tests;
+- 13 accelerated stress/soak tests;
+- final production application compile.
+
 
 # Disclaimer
 
-Stereo Tool is a product of Thimeo Audio Technology B.V. This project is not affiliated with or endorsed by Thimeo Audio Technology B.V.
+Stereo Tool is a product of Thimeo Audio Technology B.V. Magic RDS 4 is a product of Pira.cz. This project is not affiliated with or endorsed by either vendor.
