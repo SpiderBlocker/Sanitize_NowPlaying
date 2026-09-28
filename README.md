@@ -1,17 +1,27 @@
 # Sanitize NowPlaying
 
-**Current release: v3.0.0**
+**Current release: v3.0.1**
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 is the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite, while deliberately preserving the established v2.1.8 processing behaviour, settings compatibility and six-file output contract.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.1** is a maintenance release that keeps the established settings and six-file output contract while adding conservative sanitizer hardening for metadata-preservation edge cases.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
 This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
 
 
-# Highlights in v3.0.0
+# What's new in v3.0.1
+
+- Hardened adjacent comma-prefix and bracketed artist deduplication so meaningful qualifiers are preserved
+- Preserves legitimate titles ending in `Mono` or `Stereo` while still removing clearly marked technical suffixes such as `(Mono)`, `[Stereo]`, `- Stereo`, `/ Mono` and `| Stereo`
+- Duplicate-title cleanup no longer discards arbitrary trailing bracket qualifiers such as `Song (Part 1) - Song (Part 2)`
+- Apostrophe case cleanup now preserves intentional all-caps text such as `DON'T` and `O'JAYS`
+- Expanded processing-engine regression coverage from 45 to 65 self-tests
+- Settings schema, output filenames, delimiter behaviour, RT+ targets and runtime/UI behaviour are unchanged from v3.0.0
+
+
+# v3.0.0 rewrite highlights
 
 - Standalone **WinForms application** for Windows 10 and Windows 11
 - No PowerShell, console host or Windows Terminal required at runtime
@@ -99,13 +109,13 @@ This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ ar
 
 # Release lineage
 
-**v3.0.0** is intentionally a continuation of the existing project rather than a separate product. It replaces the PowerShell/conhost implementation with a native WinForms UI and a new C# runtime, while preserving the established behaviour and interfaces that were regression-tested against **v2.1.8**.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** retains the same settings schema, output filenames and file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline, while v3.0.1 intentionally includes conservative safety hardening where exact legacy processing behaviour could remove valid metadata.
 
 For users of v2.1.8, the important continuity points are:
 
 - existing settings schema retained;
 - existing output filenames retained;
-- processing behaviour parity-tested against v2.1.8;
+- unaffected baseline processing cases remain parity-tested against v2.1.8;
 - `nowplaying.txt` remains the default input filename;
 - Stereo Tool remains the default RT+ output target.
 
@@ -126,16 +136,16 @@ The v3 source code is not publicly distributed.
 # Verification
 
 
-Before release, v3.0.0 passed the complete automated verification chain:
+For v3.0.1, the release verification chain includes:
 
-- 45 processing-engine self-tests;
-- 36 parity cases × 6 output fields against the v2.1.8 processing reference;
+- 65 processing-engine self-tests, including v3.0.1 metadata-preservation regressions;
+- 36 unaffected baseline cases × 6 output fields against the v2.1.8 processing reference;
 - 30 runtime/settings/file-I/O tests;
 - 9 application-state regression tests;
 - 22 settings/overlay regression tests;
 - 25 picker/network/burn-in tests;
 - 13 accelerated stress/soak tests;
-- final production application compile.
+- final v3.0.1 production application compile.
 
 
 # Disclaimer

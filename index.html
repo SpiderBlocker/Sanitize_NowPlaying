@@ -5,15 +5,15 @@
     <meta name="google-site-verification" content="BqP9RSQfLQiSCL0kyj5hCiTWCxZPS0T6amfjk4WEgzQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanitize NowPlaying — RDS metadata sanitizer for Windows</title>
-    <meta name="description" content="Sanitize NowPlaying v3.0.0 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
+    <meta name="description" content="Sanitize NowPlaying v3.0.1 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://spiderblocker.github.io/Sanitize_NowPlaying/">
-    <meta property="og:title" content="Sanitize NowPlaying v3.0.0">
+    <meta property="og:title" content="Sanitize NowPlaying v3.0.1">
     <meta property="og:description" content="Standalone Windows metadata sanitizer for clean RDS RadioText, RT+ and component output files.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spiderblocker.github.io/Sanitize_NowPlaying/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Sanitize NowPlaying v3.0.0">
+    <meta name="twitter:title" content="Sanitize NowPlaying v3.0.1">
     <meta name="twitter:description" content="Standalone Windows application for clean RDS RadioText, RT+ and component output files.">
     <script type="application/ld+json">
     {
@@ -24,7 +24,7 @@
       "url": "https://spiderblocker.github.io/Sanitize_NowPlaying/",
       "downloadUrl": "https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip",
       "description": "Standalone Windows application that monitors playout metadata and writes clean RT, RT+ and separate prefix, artist, connector and title files for file-based RDS workflows.",
-      "softwareVersion": "3.0.0",
+      "softwareVersion": "3.0.1",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Windows 10, Windows 11",
       "author": { "@type": "Person", "name": "Loenie" },
@@ -62,11 +62,11 @@
 <body>
     <main class="page">
         <section class="hero">
-            <p class="eyebrow">Standalone RDS metadata processing · v3.0.0</p>
+            <p class="eyebrow">Standalone RDS metadata processing · v3.0.1</p>
             <h1>Sanitize NowPlaying</h1>
-            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.0.0 is a complete C# / .NET Framework 4.8 WinForms rewrite and the direct successor to the PowerShell/conhost v2.1.8 release.</p>
+            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.0.1 builds on the v3.0.0 C# / .NET Framework 4.8 WinForms rewrite with conservative sanitizer hardening for metadata-preservation edge cases.</p>
             <div class="actions">
-                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.0.0</a>
+                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.0.1</a>
                 <a class="button secondary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying">GitHub repository</a>
             </div>
         </section>
@@ -88,8 +88,13 @@
             </article>
 
             <article class="card wide highlight">
-                <h2>v3.0.0 continues the v2.1.8 lineage</h2>
-                <p>v3 is a rewrite, not a new product. The existing settings schema, output filenames and processing contract were deliberately retained, and v3 processing was regression-tested against the final v2.1.8 PowerShell reference.</p>
+                <h2>v3.0.1 sanitizer hardening</h2>
+                <p>This maintenance release makes destructive cleanup more conservative: duplicate-artist and duplicate-title handling better preserve meaningful qualifiers, legitimate titles ending in words such as <em>Mono</em> or <em>Stereo</em> are protected, and apostrophe case cleanup no longer damages intentional all-caps names or titles. Settings, output files and runtime behaviour remain compatible with v3.0.0.</p>
+            </article>
+
+            <article class="card wide">
+                <h2>v3 continues the v2.1.8 lineage</h2>
+                <p>v3 remains the same product lineage and retains the established settings schema, output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline; v3.0.1 intentionally contains conservative safety hardening where exact legacy behaviour could remove valid metadata.</p>
             </article>
 
             <article class="card wide">
@@ -118,6 +123,7 @@
                 <h2>Metadata handling</h2>
                 <ul>
                     <li>Artist/title cleanup and conservative splitting</li>
+                    <li>Metadata-preserving duplicate and technical-suffix cleanup</li>
                     <li>Balanced <code>()</code>, <code>[]</code> and <code>{}</code> handling</li>
                     <li>Configurable prefix, connector and delimiter</li>
                     <li>Optional Greek/Cyrillic transliteration and ASCII-safe mode</li>
