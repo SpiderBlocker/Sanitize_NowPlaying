@@ -1,24 +1,29 @@
 # Sanitize NowPlaying
 
-**Current release: v3.0.1**
+**Current release: v3.0.2**
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.1** is a maintenance release that keeps the established settings and six-file output contract while adding conservative sanitizer hardening for metadata-preservation edge cases.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.2** keeps the established settings and six-file output contract while adding stronger malformed-input handling, text-decoding safety, RT+ escaping, recoverable worker behaviour and diagnostics.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
 This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
 
 
-# What's new in v3.0.1
+# What's new in v3.0.2
 
-- Hardened adjacent comma-prefix and bracketed artist deduplication so meaningful qualifiers are preserved
-- Preserves legitimate titles ending in `Mono` or `Stereo` while still removing clearly marked technical suffixes such as `(Mono)`, `[Stereo]`, `- Stereo`, `/ Mono` and `| Stereo`
-- Duplicate-title cleanup no longer discards arbitrary trailing bracket qualifiers such as `Song (Part 1) - Song (Part 2)`
-- Apostrophe case cleanup now preserves intentional all-caps text such as `DON'T` and `O'JAYS`
-- Expanded processing-engine regression coverage from 45 to 65 self-tests
-- Settings schema, output filenames, delimiter behaviour, RT+ targets and runtime/UI behaviour are unchanged from v3.0.0
+- Strict UTF-8 decoding now falls back to the Windows default code page only when decoding actually fails; replacement characters are stripped defensively
+- Metadata with more than one configured delimiter now fails closed instead of being concatenated into misleading artist/title output
+- Oversized input is rejected before expensive processing: files above 64 KiB and raw metadata above 4096 characters fail closed
+- RT+ output is hardened against formatter/tag injection for both Stereo Tool and Magic RDS 4
+- A recoverable exception while processing one metadata update no longer terminates the runtime worker; the affected update fails closed and later updates continue
+- Diagnostic logging was added under `%LOCALAPPDATA%\Sanitize NowPlaying\SanitizeNowPlaying.log`, including corrupt-settings fallback and unexpected runtime/UI failures
+- Custom-text validation now uses the public Core conversion path directly; the previous reflection and duplicate normalization logic were removed
+- `Ctrl+C` is no longer an Exit shortcut; normal shutdown uses a rounded in-app `EXIT` / `CANCEL` confirmation and clears all output files only after confirmation
+- Invalid metadata is shown as `INVALID DATA`, clarifying that the content rather than the input file itself is invalid
+- v3.0.1 metadata-preservation hardening remains in place, including safer duplicate cleanup, technical-suffix handling and apostrophe case preservation
+- Settings schema and output filenames remain compatible with v3.0.0/v3.0.1; no migration is required
 
 
 # v3.0.0 rewrite highlights
@@ -29,11 +34,11 @@ This project was created through iterative co-development with ChatGPT 5.2 / 5.5
 - Configurable input filename; `nowplaying.txt` remains the default
 - Low-overhead hybrid input monitoring with immediate wake-up on metadata changes
 - Automatic handling of temporarily unavailable mapped drives and UNC Working Directories
-- Clear `EMPTY`, `MISSING`, `EXPIRED`, `OFFLINE` / unavailable and invalid-input states
+- Clear `EMPTY`, `MISSING`, `EXPIRED`, `OFFLINE` / unavailable and `INVALID DATA` states
 - Transactional in-app **F10 Settings** UI with draggable nested overlays
 - Atomic settings saves and verified single-worker runtime handover
 - Per-file atomic output writes with retry protection
-- Startup freshness checks and output clearing on shutdown to prevent stale RDS data
+- Startup freshness checks and confirmed output clearing on shutdown to prevent stale RDS data
 - Single-instance protection
 - In-app About panel and polished graphical status presentation
 
@@ -109,7 +114,7 @@ This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ ar
 
 # Release lineage
 
-**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** retains the same settings schema, output filenames and file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline, while v3.0.1 intentionally includes conservative safety hardening where exact legacy processing behaviour could remove valid metadata.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** retains the same settings schema, output filenames and file-interface contract while strengthening malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
 
 For users of v2.1.8, the important continuity points are:
 
@@ -135,17 +140,16 @@ The v3 source code is not publicly distributed.
 
 # Verification
 
+For v3.0.2, the release verification chain includes:
 
-For v3.0.1, the release verification chain includes:
-
-- 65 processing-engine self-tests, including v3.0.1 metadata-preservation regressions;
-- 36 unaffected baseline cases × 6 output fields against the v2.1.8 processing reference;
-- 30 runtime/settings/file-I/O tests;
+- 73 processing-engine self-tests, including v3.0.1 metadata-preservation and v3.0.2 malformed-input / RT+ hardening regressions;
+- 35 unaffected baseline cases × 6 output fields against the v2.1.8 processing reference;
+- 34 runtime/settings/file-I/O tests;
 - 9 application-state regression tests;
-- 22 settings/overlay regression tests;
+- 24 settings/overlay regression tests;
 - 25 picker/network/burn-in tests;
 - 13 accelerated stress/soak tests;
-- final v3.0.1 production application compile.
+- final v3.0.2 production application compile.
 
 
 # Disclaimer
