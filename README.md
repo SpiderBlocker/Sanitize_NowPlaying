@@ -1,29 +1,25 @@
 # Sanitize NowPlaying
 
-**Current release: v3.0.2**
+**Current release: v3.0.3**
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.2** keeps the established settings and six-file output contract while adding stronger malformed-input handling, text-decoding safety, RT+ escaping, recoverable worker behaviour and diagnostics.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.3** keeps the established settings and six-file output contract while refining responsiveness and status presentation on top of the v3.0.2 runtime/input hardening.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
 This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
 
 
-# What's new in v3.0.2
+# What's new in v3.0.3
 
-- Strict UTF-8 decoding now falls back to the Windows default code page only when decoding actually fails; replacement characters are stripped defensively
-- Metadata with more than one configured delimiter now fails closed instead of being concatenated into misleading artist/title output
-- Oversized input is rejected before expensive processing: files above 64 KiB and raw metadata above 4096 characters fail closed
-- RT+ output is hardened against formatter/tag injection for both Stereo Tool and Magic RDS 4
-- A recoverable exception while processing one metadata update no longer terminates the runtime worker; the affected update fails closed and later updates continue
-- Diagnostic logging was added under `%LOCALAPPDATA%\Sanitize NowPlaying\SanitizeNowPlaying.log`, including corrupt-settings fallback and unexpected runtime/UI failures
-- Custom-text validation now uses the public Core conversion path directly; the previous reflection and duplicate normalization logic were removed
-- `Ctrl+C` is no longer an Exit shortcut; normal shutdown uses a rounded in-app `EXIT` / `CANCEL` confirmation and clears all output files only after confirmation
-- Invalid metadata is shown as `INVALID DATA`, clarifying that the content rather than the input file itself is invalid
-- v3.0.1 metadata-preservation hardening remains in place, including safer duplicate cleanup, technical-suffix handling and apostrophe case preservation
-- Settings schema and output filenames remain compatible with v3.0.0/v3.0.1; no migration is required
+- Reduced the special empty-title / artist-only split-write quiet period from **600 ms to 100 ms**
+- A later title write is still detected normally by the hybrid input monitor and republishes the completed metadata
+- Kept the existing round status-leader dots but doubled their centre-to-centre pitch to the Colour Lab-selected **200%**
+- Replaced the quantized LAST UPDATE colour ramp with explicit states: **healthy below 5 minutes**, **warning from 5:00 through 14:59**, and **error from 15:00 onward**
+- Increased `TextMuted` from RGB `105/105/105` to **`125/125/125`**
+- Increased separator lines from RGB `82/82/82` to **`100/100/100`**
+- Settings schema, input/output filenames, delimiter behaviour and RT+ target formats are unchanged from v3.0.2; no migration is required
 
 
 # v3.0.0 rewrite highlights
@@ -55,7 +51,7 @@ This project was created through iterative co-development with ChatGPT 5.2 / 5.5
 - Optional Greek/Cyrillic transliteration and ASCII-safe mode
 - Independent 64-character artist/title component limits
 - Adaptive trimming of combined RT/RT+ content to the RDS 64-character limit
-- Strengthened partial-write handling for playout applications that write artist and title in separate steps
+- Short 100 ms partial-write guard for empty-title / artist-only input, with later file changes reprocessed normally
 
 
 # Output files
@@ -114,7 +110,7 @@ This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ ar
 
 # Release lineage
 
-**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** retains the same settings schema, output filenames and file-interface contract while strengthening malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** retains the same settings schema, output filenames and file-interface contract while reducing the artist-only quiet period and refining status/contrast presentation. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
 
 For users of v2.1.8, the important continuity points are:
 
@@ -140,16 +136,16 @@ The v3 source code is not publicly distributed.
 
 # Verification
 
-For v3.0.2, the release verification chain includes:
+For v3.0.3, the release verification chain includes:
 
 - 73 processing-engine self-tests, including v3.0.1 metadata-preservation and v3.0.2 malformed-input / RT+ hardening regressions;
 - 35 unaffected baseline cases × 6 output fields against the v2.1.8 processing reference;
 - 34 runtime/settings/file-I/O tests;
 - 9 application-state regression tests;
-- 24 settings/overlay regression tests;
+- 26 settings/overlay regression tests;
 - 25 picker/network/burn-in tests;
 - 13 accelerated stress/soak tests;
-- final v3.0.2 production application compile.
+- final v3.0.3 production application compile.
 
 
 # Disclaimer
