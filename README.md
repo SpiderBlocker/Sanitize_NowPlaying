@@ -1,25 +1,28 @@
 # Sanitize NowPlaying
 
-**Current release: v3.0.3**
+**Current release: v3.0.4**
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.3** keeps the established settings and six-file output contract while refining responsiveness and status presentation on top of the v3.0.2 runtime/input hardening.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.4** keeps the established settings and six-file output contract while adding focused sanitizer correctness, regex-safety and metadata-preservation hardening on top of the v3.0.3 responsiveness/UI refinements.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
 This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
 
 
-# What's new in v3.0.3
+# What's new in v3.0.4
 
-- Reduced the special empty-title / artist-only split-write quiet period from **600 ms to 100 ms**
-- A later title write is still detected normally by the hybrid input monitor and republishes the completed metadata
-- Kept the existing round status-leader dots but doubled their centre-to-centre pitch to the Colour Lab-selected **200%**
-- Replaced the quantized LAST UPDATE colour ramp with explicit states: **healthy below 5 minutes**, **warning from 5:00 through 14:59**, and **error from 15:00 onward**
-- Increased `TextMuted` from RGB `105/105/105` to **`125/125/125`**
-- Increased separator lines from RGB `82/82/82` to **`100/100/100`**
-- Settings schema, input/output filenames, delimiter behaviour and RT+ target formats are unchanged from v3.0.2; no migration is required
+- Prevents version/remaster/whitelist/soundtrack/live-location cleanup from consuming meaningful title text before the rightmost eligible metadata tail
+- Preserves natural hyphenated text such as `Re-Live It`, `Non-Studio Jam`, `Squeaky-Clean` and `Hero-Epic Movie Soundtrack`
+- Makes country cleanup more preservation-first: ambiguous ISO-like prefixes such as `DJ`, `MC`, `TV` and `CAN` are preserved, while clear full-country prefixes and safe artist-only trailing ISO2 tags such as `Diesel (NL)` remain supported
+- Supports clear country-prefix forms even when a feed omits whitespace around the separator, including `The Netherlands-Walk Along`
+- Uses single-pass HTML entity decoding, strips decoded invisible controls, normalizes NFD input to NFC and keeps apostrophe-case cleanup consistent across standalone, RT and RT+ output
+- Tightens degree/temperature and omega/unit replacement boundaries and preserves natural compilation phrases such as `Best of Friends`, `Best of Both Worlds` and `The Best of Both Worlds`
+- Moves regex timeout configuration to process start, uses bounded matching in higher-risk sanitizer paths and fails closed on `RegexMatchTimeoutException`
+- Reduces the Core raw-metadata limit from 4096 to **1024 characters**; the 64 KiB input-file guard is unchanged
+- Expands the processing-engine self-test suite from 73 to **158 tests**
+- Settings schema, input/output filenames, delimiter behaviour and RT+ target formats are unchanged from v3.0.3; no migration is required
 
 
 # v3.0.0 rewrite highlights
@@ -42,6 +45,7 @@ This project was created through iterative co-development with ChatGPT 5.2 / 5.5
 # Metadata processing
 
 - Intelligent artist/title cleanup for encoders, bitrates, country/year suffixes, platform tags, duplicate information and other common library noise
+- Preservation-first handling for ambiguous country codes, natural hyphenation and technical/version tails
 - Conservative artist/title splitting
 - Balanced bracket handling for `()`, `[]` and `{}`, including cleanup of unmatched or mismatched brackets
 - Configurable artist/title order for compact RT/RT+ presentation
@@ -110,7 +114,7 @@ This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ ar
 
 # Release lineage
 
-**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** retains the same settings schema, output filenames and file-interface contract while reducing the artist-only quiet period and refining status/contrast presentation. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** reduced the artist-only quiet period and refined status/contrast presentation. **v3.0.4** adds focused sanitizer correctness, Unicode/entity consistency and regex-safety hardening while retaining the same settings schema, output filenames and file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
 
 For users of v2.1.8, the important continuity points are:
 
@@ -136,16 +140,16 @@ The v3 source code is not publicly distributed.
 
 # Verification
 
-For v3.0.3, the release verification chain includes:
+For v3.0.4, the release verification chain includes:
 
-- 73 processing-engine self-tests, including v3.0.1 metadata-preservation and v3.0.2 malformed-input / RT+ hardening regressions;
-- 35 unaffected baseline cases × 6 output fields against the v2.1.8 processing reference;
-- 34 runtime/settings/file-I/O tests;
-- 9 application-state regression tests;
-- 26 settings/overlay regression tests;
-- 25 picker/network/burn-in tests;
-- 13 accelerated stress/soak tests;
-- final v3.0.3 production application compile.
+- **158 processing-engine self-tests**, including v3.0.1 metadata-preservation, v3.0.2 malformed-input / RT+ hardening and v3.0.4 sanitizer-preservation / regex-safety regressions;
+- **35 unaffected baseline cases × 6 output fields** against the PowerShell v2.1.8 processing reference;
+- **34 runtime/settings/file-I/O tests**;
+- **9 application-state regression tests**;
+- **26 settings/overlay regression tests**;
+- **25 picker/network/burn-in tests**;
+- **13 accelerated stress/soak tests**;
+- final v3.0.4 production application compile.
 
 
 # Disclaimer

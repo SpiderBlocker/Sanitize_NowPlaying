@@ -5,15 +5,15 @@
     <meta name="google-site-verification" content="BqP9RSQfLQiSCL0kyj5hCiTWCxZPS0T6amfjk4WEgzQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanitize NowPlaying — RDS metadata sanitizer for Windows</title>
-    <meta name="description" content="Sanitize NowPlaying v3.0.3 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
+    <meta name="description" content="Sanitize NowPlaying v3.0.4 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://spiderblocker.github.io/Sanitize_NowPlaying/">
-    <meta property="og:title" content="Sanitize NowPlaying v3.0.3">
+    <meta property="og:title" content="Sanitize NowPlaying v3.0.4">
     <meta property="og:description" content="Standalone Windows metadata sanitizer for clean RDS RadioText, RT+ and component output files.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spiderblocker.github.io/Sanitize_NowPlaying/">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Sanitize NowPlaying v3.0.3">
+    <meta name="twitter:title" content="Sanitize NowPlaying v3.0.4">
     <meta name="twitter:description" content="Standalone Windows application for clean RDS RadioText, RT+ and component output files.">
     <script type="application/ld+json">
     {
@@ -24,7 +24,7 @@
       "url": "https://spiderblocker.github.io/Sanitize_NowPlaying/",
       "downloadUrl": "https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip",
       "description": "Standalone Windows application that monitors playout metadata and writes clean RT, RT+ and separate prefix, artist, connector and title files for file-based RDS workflows.",
-      "softwareVersion": "3.0.3",
+      "softwareVersion": "3.0.4",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Windows 10, Windows 11",
       "author": { "@type": "Person", "name": "Loenie" },
@@ -62,11 +62,11 @@
 <body>
     <main class="page">
         <section class="hero">
-            <p class="eyebrow">Standalone RDS metadata processing · v3.0.3</p>
+            <p class="eyebrow">Standalone RDS metadata processing · v3.0.4</p>
             <h1>Sanitize NowPlaying</h1>
-            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.0.3 is a small responsiveness and UI-legibility maintenance update with a shorter artist-only split-write guard, wider status-leader dot spacing, explicit 5/15-minute health colours and improved muted/separator contrast.</p>
+            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.0.4 is a sanitizer correctness and robustness maintenance release with safer tail and country cleanup, more consistent Unicode/entity handling, bounded regex processing and expanded regression coverage.</p>
             <div class="actions">
-                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.0.3</a>
+                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.0.4</a>
                 <a class="button secondary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying">GitHub repository</a>
             </div>
         </section>
@@ -88,13 +88,13 @@
             </article>
 
             <article class="card wide highlight">
-                <h2>v3.0.3 responsiveness &amp; UI refinement</h2>
-                <p>This maintenance release reduces the special empty-title / artist-only split-write quiet period from 600 ms to 100 ms, while later title writes are still detected and republished normally. The existing round status-leader dots now use 200% spacing, LAST UPDATE colours switch explicitly at 5 and 15 minutes, <em>TextMuted</em> is raised to RGB 125/125/125 and separator lines to RGB 100/100/100. Settings and output filenames remain fully compatible with v3.0.0–v3.0.2.</p>
+                <h2>v3.0.4 sanitizer correctness &amp; robustness</h2>
+                <p>This maintenance release makes destructive metadata cleanup more preservation-first. Version, remaster, soundtrack, live-location and related tails are removed from the rightmost eligible boundary without consuming meaningful title text; natural hyphenation such as <em>Re-Live It</em> and <em>Squeaky-Clean</em> is protected; country cleanup better avoids ambiguous short-code false positives while retaining clear country tags; Unicode/entity normalization and apostrophe case are kept consistent across component, RT and RT+ output; regex processing is bounded and fails closed; and Core regression coverage is expanded to 158 tests. Settings, filenames, delimiter behaviour and RT+ target formats remain unchanged.</p>
             </article>
 
             <article class="card wide">
                 <h2>v3 continues the v2.1.8 lineage</h2>
-                <p>v3 remains the same product lineage and retains the established settings schema, output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline; v3.0.1 introduced conservative metadata-preservation hardening, v3.0.2 added fail-closed malformed-input handling and runtime resilience, and v3.0.3 refines responsiveness and status presentation without changing the file-interface contract.</p>
+                <p>v3 remains the same product lineage and retains the established settings schema, output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline; v3.0.1 introduced conservative metadata-preservation hardening, v3.0.2 added fail-closed malformed-input handling and runtime resilience, v3.0.3 refined responsiveness and status presentation, and v3.0.4 further hardens sanitizer correctness and regex safety without changing the file-interface contract.</p>
             </article>
 
             <article class="card wide">
@@ -123,7 +123,7 @@
                 <h2>Metadata handling</h2>
                 <ul>
                     <li>Artist/title cleanup and conservative splitting</li>
-                    <li>Metadata-preserving duplicate and technical-suffix cleanup</li>
+                    <li>Metadata-preserving duplicate, country and technical-suffix cleanup</li>
                     <li>Balanced <code>()</code>, <code>[]</code> and <code>{}</code> handling</li>
                     <li>Configurable prefix, connector and delimiter</li>
                     <li>Optional Greek/Cyrillic transliteration and ASCII-safe mode</li>
