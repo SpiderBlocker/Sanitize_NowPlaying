@@ -1,50 +1,52 @@
 # Sanitize NowPlaying
 
-**Current release: v3.0.4**
+**Current release: v3.1.0**
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.0.4** keeps the established settings and six-file output contract while adding focused sanitizer correctness, regex-safety and metadata-preservation hardening on top of the v3.0.3 responsiveness/UI refinements.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.1.0** adds configurable processing, an independent output folder and quick access to common settings, with improved multilingual handling, output recovery and diagnostics. Existing settings load without migration; the six output filenames and RT+ target formats are retained.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
-This project was created through iterative co-development with ChatGPT 5.2 / 5.5 / 5.6, combining AI-assisted development with hands-on design, testing and optimization.
+Developed and reviewed with AI assistance, alongside hands-on design, testing and refinement.
 
 
-# What's new in v3.0.4
+# What's new in v3.1.0
 
-- Prevents version/remaster/whitelist/soundtrack/live-location cleanup from consuming meaningful title text before the rightmost eligible metadata tail
-- Preserves natural hyphenated text such as `Re-Live It`, `Non-Studio Jam`, `Squeaky-Clean` and `Hero-Epic Movie Soundtrack`
-- Makes country cleanup more preservation-first: ambiguous ISO-like prefixes such as `DJ`, `MC`, `TV` and `CAN` are preserved, while clear full-country prefixes and safe artist-only trailing ISO2 tags such as `Diesel (NL)` remain supported
-- Supports clear country-prefix forms even when a feed omits whitespace around the separator, including `The Netherlands-Walk Along`
-- Uses single-pass HTML entity decoding, strips decoded invisible controls, normalizes NFD input to NFC and keeps apostrophe-case cleanup consistent across standalone, RT and RT+ output
-- Tightens degree/temperature and omega/unit replacement boundaries and preserves natural compilation phrases such as `Best of Friends`, `Best of Both Worlds` and `The Best of Both Worlds`
-- Moves regex timeout configuration to process start, uses bounded matching in higher-risk sanitizer paths and fails closed on `RegexMatchTimeoutException`
-- Reduces the Core raw-metadata limit from 4096 to **1024 characters**; the 64 KiB input-file guard is unchanged
-- Expands the processing-engine self-test suite from 73 to **158 tests**
-- Settings schema, input/output filenames, delimiter behaviour and RT+ target formats are unchanged from v3.0.3; no migration is required
+- **Twelve configurable sanitizer rules**, with every rule enabled by default
+- **Text case options:** Original, All caps and Capitalize words
+- **Independent output folder:** follow the input folder by default, or select a separate destination
+- **Five status-bar quick menus:** Rules, Chars, Translit, Case and Order, with direct saving, consistent checkbox/radio markers and keyboard navigation
+- Refined F10 and initial-setup menus, quieter focus/hover styling, compact bottom-right actions and complete, readable error messages
+- Correct RT/RT+ length budgeting after text conversion, with improved Vietnamese, combining-accent and other Unicode handling
+- Stronger output retry and recovery, including immediate retries for new metadata and safe retirement of replaced output writers
+- Clear separation of directory availability and file write errors: missing/inaccessible folders show `UNAVAILABLE`; `WRITE FAILED` belongs to affected output files
+- Safer settings loading, corrupt-settings backups, clearer rollback diagnostics and tolerance for input timestamps up to five minutes ahead
+- Full native Windows verification: **731 counted automated cases**, plus the actual UI and startup probes, all passed
+
+The new settings are additive. Their defaults retain v3.0.4 behavior: all sanitizer rules enabled, Original text case and output in the input folder. Existing valid settings files load without migration; output filenames, delimiter handling and RT+ target syntax remain compatible.
 
 
 # v3.0.0 rewrite highlights
 
 - Standalone **WinForms application** for Windows 10 and Windows 11
 - No PowerShell, console host or Windows Terminal required at runtime
-- First-run Working Directory setup with integrated folder and volume picker
+- First-run input-folder setup with integrated folder and volume picker
 - Configurable input filename; `nowplaying.txt` remains the default
 - Low-overhead hybrid input monitoring with immediate wake-up on metadata changes
-- Automatic handling of temporarily unavailable mapped drives and UNC Working Directories
-- Clear `EMPTY`, `MISSING`, `EXPIRED`, `OFFLINE` / unavailable and `INVALID DATA` states
+- Automatic handling of temporarily unavailable mapped drives and UNC input/output folders
+- Clear `EMPTY`, `MISSING`, `EXPIRED` and `INVALID DATA` input states, `UNAVAILABLE` folder status and per-file `WRITE FAILED` reporting
 - Transactional in-app **F10 Settings** UI with draggable nested overlays
 - Atomic settings saves and verified single-worker runtime handover
 - Per-file atomic output writes with retry protection
 - Startup freshness checks and confirmed output clearing on shutdown to prevent stale RDS data
-- Single-instance protection
+- Single-instance protection within a Windows logon session
 - In-app About panel and polished graphical status presentation
 
 
 # Metadata processing
 
-- Intelligent artist/title cleanup for encoders, bitrates, country/year suffixes, platform tags, duplicate information and other common library noise
+- Intelligent artist/title cleanup for encoders, bitrates, country/year suffixes, platform tags, duplicate information and other common library noise, with twelve independently selectable rules
 - Preservation-first handling for ambiguous country codes, natural hyphenation and technical/version tails
 - Conservative artist/title splitting
 - Balanced bracket handling for `()`, `[]` and `{}`, including cleanup of unmatched or mismatched brackets
@@ -52,15 +54,17 @@ This project was created through iterative co-development with ChatGPT 5.2 / 5.5
 - Multilingual or custom prefix text
 - Configurable connector text
 - Configurable playout delimiter, including U+241F, TAB and custom values
-- Optional Greek/Cyrillic transliteration and ASCII-safe mode
+- Optional Greek/Cyrillic transliteration; ASCII-safe mode requires transliteration
+- Original, All caps or Capitalize words text case
+- NFC normalization and improved handling of Vietnamese, combining accents and additional Unicode letters
 - Independent 64-character artist/title component limits
-- Adaptive trimming of combined RT/RT+ content to the RDS 64-character limit
+- Adaptive trimming of combined RT/RT+ content after conversion, within the existing 64-character budget and without splitting supported letter/accent sequences
 - Short 100 ms partial-write guard for empty-title / artist-only input, with later file changes reprocessed normally
 
 
 # Output files
 
-All output files are written as UTF-8 without BOM in the selected Working Directory and are replaced atomically.
+All output files are written as UTF-8 without BOM in the selected **output folder** and are replaced atomically, one file at a time. By default, output follows the input folder. A separate destination can be selected under **F10 Settings > Output settings > Output folder**. The six files are not updated as one atomic set.
 
 | File | Contents |
 | --- | --- |
@@ -88,13 +92,15 @@ The application is built as AnyCPU.
 
 # Quick start
 
-1. Download the current `Sanitize-NowPlaying.zip`.
+1. Download the current [SanitizeNowPlaying.zip](https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip).
 2. Extract it to a writable folder.
 3. Run `SanitizeNowPlaying.exe`.
-4. On first start, select the Working Directory used by your playout software.
+4. On first start, select the input folder used by your playout software. Output follows this folder by default.
 5. Configure the playout application to write artist/title metadata to the selected input file. The default filename is `nowplaying.txt`.
-6. Open **F10 Settings** when you want to change the Working Directory, input filename, prefix, artist/title order, connector, ASCII/transliteration behaviour, delimiter or RT+ output target.
+6. Open **F10 Settings** to configure the input/output folders, input filename, sanitizer rules, text case, prefix, artist/title order, connector, character set, transliteration, delimiter or RT+ output target. **Save & exit** applies the draft; Esc from the root discards it.
 7. Configure Stereo Tool, Magic RDS 4 or another RDS application to read the ready-made RT/RT+ file or the separate component files required by your workflow.
+
+The **Rules, Chars, Translit, Case and Order** fields at the bottom offer quick access. Rules stays open for successive immediately saved changes; single-choice menus close after a successful selection. Tab/Shift+Tab moves footer focus, Enter/Space opens a menu, Up/Down moves choices and Left/Right switches between quick menus. Esc dismisses the popup.
 
 When using the recommended U+241F separator, a typical playout metadata format is:
 
@@ -109,27 +115,40 @@ The separate component files can be combined as an alternating RadioText sequenc
 
 This displays the prefix for 5 seconds, the artist for 10 seconds with an RT+ artist tag, the connector for 5 seconds, and the title for 10 seconds with an RT+ title tag.
 
-**Synchronization note:** Stereo Tool reads each referenced component file when that section becomes active rather than taking one shared snapshot of all component files. If metadata changes mid-sequence, components from adjacent songs can therefore be mixed. Use the ready-made `nowplaying_rt.txt` / `nowplaying_rtplus.txt` output when guaranteed artist/title consistency is more important than separate component rotation.
+**Synchronization note:** Stereo Tool reads each referenced component file when that section becomes active rather than taking one shared snapshot of all component files. If metadata changes mid-sequence, components from adjacent songs can therefore be mixed. Each ready-made `nowplaying_rt.txt` or `nowplaying_rtplus.txt` file contains one complete combined payload and avoids that component-rotation issue. The two files themselves are still replaced independently.
+
+
+# Folder status and recovery
+
+The input and output folders are monitored independently. Missing or inaccessible folders show **UNAVAILABLE**; the output availability check can briefly show **CHECKING**. A reachable folder remains available when file writes fail, while affected output files show **WRITE FAILED**. The latest metadata is retried after recovery.
+
+An unwritable shared input/output folder is refused during setup or folder selection. Read-only input can be used with a separate output destination. A deleted or renamed configured folder is not automatically recreated during monitoring, retries or shutdown; restore its original path or select another folder explicitly.
+
+Short messages remain on one line. Longer messages wrap; unusually long diagnostics appear in an owned OK notice with scrolling and copying when needed. The main window retains its size.
+
+The application log is available at `%LOCALAPPDATA%\Sanitize NowPlaying\SanitizeNowPlaying.log`; the previous rotated log is `SanitizeNowPlaying.log.old`.
 
 
 # Release lineage
 
-**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** reduced the artist-only quiet period and refined status/contrast presentation. **v3.0.4** adds focused sanitizer correctness, Unicode/entity consistency and regex-safety hardening while retaining the same settings schema, output filenames and file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** reduced the artist-only quiet period and refined status/contrast presentation. **v3.0.4** adds focused sanitizer correctness, Unicode/entity consistency and regex-safety hardening while retaining the same settings schema, output filenames and file-interface contract. **v3.1.0** adds configurable sanitizer rules, text case, separate output destinations and quick access while retaining the established file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
 
 For users of v2.1.8, the important continuity points are:
 
-- existing settings schema retained;
+- existing valid settings load without migration; v3.1.0 adds optional fields with compatible defaults;
 - existing output filenames retained;
 - unaffected baseline processing cases remain parity-tested against v2.1.8;
 - `nowplaying.txt` remains the default input filename;
 - Stereo Tool remains the default RT+ output target.
+
+**Downgrade note:** v3.0.4 ignores the new fields and uses the input folder for output again. Saving settings with the older version can discard the new fields; retain a settings backup before downgrading.
 
 Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed.
 
 
 # License
 
-Sanitize NowPlaying **v3.0.0 and later** is distributed under the proprietary Sanitize NowPlaying license included with the release package.
+Sanitize NowPlaying **v3.0.0 and later, including v3.1.0,** is distributed under the proprietary [Sanitize NowPlaying license](LICENSE). Include the license with the official binary package.
 
 The v3 executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms. The complete, unmodified official binary package may also be redistributed subject to the license conditions.
 
@@ -140,16 +159,22 @@ The v3 source code is not publicly distributed.
 
 # Verification
 
-For v3.0.4, the release verification chain includes:
+The complete native Windows verification run for the current v3.1.0 source passed on **11 October 2026**:
 
-- **158 processing-engine self-tests**, including v3.0.1 metadata-preservation, v3.0.2 malformed-input / RT+ hardening and v3.0.4 sanitizer-preservation / regex-safety regressions;
-- **35 unaffected baseline cases × 6 output fields** against the PowerShell v2.1.8 processing reference;
-- **34 runtime/settings/file-I/O tests**;
-- **9 application-state regression tests**;
-- **26 settings/overlay regression tests**;
-- **25 picker/network/burn-in tests**;
-- **13 accelerated stress/soak tests**;
-- final v3.0.4 production application compile.
+| Suite | Passed | Failed |
+| --- | ---: | ---: |
+| Processing engine | 528 | 0 |
+| PowerShell v2.1.8 baseline parity, six fields per case | 35 | 0 |
+| Runtime/settings/file I/O | 59 | 0 |
+| Application state | 35 | 0 |
+| Settings/overlay | 33 | 0 |
+| Picker/network/burn-in | 28 | 0 |
+| Accelerated stress/soak | 13 | 0 |
+| **Total counted cases** | **731** | **0** |
+
+The production build, actual UI probes and startup/cleanup probes also passed. The QUICK stress run completed **14,921 simulated operations** with zero transient read retries. Coverage includes quick-save rollback/retry, folder permissions and recovery, checkbox/radio rendering, keyboard navigation, multilingual text and complete wrapped/scrollable messages.
+
+Display scaling, actual network shares and the encoder's character repertoire remain deployment-specific checks. Single-instance protection is per Windows logon session; use one writer per output folder. Output files are individually atomic, not atomic as a six-file set.
 
 
 # Disclaimer
