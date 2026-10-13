@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="BqP9RSQfLQiSCL0kyj5hCiTWCxZPS0T6amfjk4WEgzQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanitize NowPlaying — RDS metadata sanitizer for Windows</title>
-    <meta name="description" content="Sanitize NowPlaying v3.1.0 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
+    <title>Sanitize NowPlaying v3.1.1 — RDS metadata sanitizer for Windows</title>
+    <meta name="description" content="Sanitize NowPlaying v3.1.1 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://spiderblocker.github.io/Sanitize_NowPlaying/">
-    <meta property="og:title" content="Sanitize NowPlaying v3.1.0">
+    <meta property="og:title" content="Sanitize NowPlaying v3.1.1">
     <meta property="og:description" content="Standalone Windows metadata sanitizer for clean RDS RadioText, RT+ and component output files.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spiderblocker.github.io/Sanitize_NowPlaying/">
+    <meta property="og:image" content="https://spiderblocker.github.io/Sanitize_NowPlaying/assets/SanitizeNowPlaying-logo.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="Sanitize NowPlaying logo">
+    <link rel="icon" type="image/png" href="assets/SanitizeNowPlaying-logo.png">
+    <meta name="twitter:image" content="https://spiderblocker.github.io/Sanitize_NowPlaying/assets/SanitizeNowPlaying-logo.png">
+    <meta name="twitter:image:alt" content="Sanitize NowPlaying logo">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Sanitize NowPlaying v3.1.0">
+    <meta name="twitter:title" content="Sanitize NowPlaying v3.1.1">
     <meta name="twitter:description" content="Standalone Windows application for clean RDS RadioText, RT+ and component output files.">
     <script type="application/ld+json">
     {
@@ -24,7 +31,7 @@
       "url": "https://spiderblocker.github.io/Sanitize_NowPlaying/",
       "downloadUrl": "https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip",
       "description": "Standalone Windows application that monitors playout metadata and writes clean RT, RT+ and separate prefix, artist, connector and title files for file-based RDS workflows.",
-      "softwareVersion": "3.1.0",
+      "softwareVersion": "3.1.1",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Windows 10, Windows 11",
       "author": { "@type": "Person", "name": "Loenie" },
@@ -38,35 +45,44 @@
         a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
         .page { max-width:980px; margin:0 auto; padding:32px 20px 48px; }
         .hero { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:34px; box-shadow:0 14px 38px rgba(15,23,42,.08); }
+        .hero-heading { display:flex; align-items:center; gap:26px; }
+        .app-logo { display:block; flex:0 0 auto; width:144px; height:144px; object-fit:contain; filter:drop-shadow(0 5px 8px rgba(15,23,42,.10)); }
+        .hero-heading > div { min-width:0; }
         .eyebrow { margin:0 0 12px; color:var(--accent-dark); font-size:.86rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
         h1 { margin:0; font-size:clamp(2rem,4vw,3rem); line-height:1.12; color:#17202a; }
         .lead { max-width:780px; margin:18px 0 0; color:var(--muted); font-size:1.12rem; }
         .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
         .button { display:inline-block; padding:11px 17px; border-radius:999px; border:1px solid var(--accent); font-weight:700; }
         .button.primary { color:#fff; background:var(--accent); } .button.secondary { color:var(--accent-dark); background:#fff; }
-        .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:22px; }
-        .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(15,23,42,.05); }
+        .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-top:22px; }
+        .card { min-width:0; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 8px 24px rgba(15,23,42,.05); }
         .card h2, .card h3 { margin-top:0; color:#17202a; } .card h2 { font-size:1.35rem; } .card h3 { font-size:1.08rem; }
         .wide { grid-column:1 / -1; } .highlight { background:var(--soft); border-left:4px solid var(--accent); }
         ul { padding-left:1.25rem; margin-bottom:0; } li { margin:.35rem 0; }
-        .flow { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:16px; }
-        .step { padding:14px; background:#f8fafc; border:1px solid var(--line); border-radius:14px; } .step strong { display:block; margin-bottom:4px; color:#17202a; }
+        .flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:16px; }
+        .step { min-width:0; padding:14px; background:#f8fafc; border:1px solid var(--line); border-radius:14px; } .step strong { display:block; margin-bottom:4px; color:#17202a; }
         code { color:#fff; background:var(--code); border-radius:6px; padding:2px 6px; white-space:nowrap; }
         pre { overflow-x:auto; color:#fff; background:var(--code); border-radius:14px; padding:16px; line-height:1.45; }
         .note { color:var(--muted); font-size:.95rem; }
         footer { margin-top:28px; color:var(--muted); text-align:center; font-size:.92rem; }
         .disclaimer { max-width:800px; margin:8px auto 0; font-size:.84rem; line-height:1.5; }
         @media (max-width:800px) { .grid, .flow { grid-template-columns:1fr; } .hero { padding:26px; } }
+        @media (max-width:560px) { .page { padding:20px 16px 32px; } .hero { padding:24px 20px; } .hero-heading { flex-direction:column; gap:20px; text-align:center; } .app-logo { width:104px; height:104px; } .actions .button { width:100%; text-align:center; } code { overflow-wrap:anywhere; white-space:normal; } pre code { white-space:pre; overflow-wrap:normal; } }
     </style>
 </head>
 <body>
     <main class="page">
         <section class="hero">
-            <p class="eyebrow">Standalone RDS metadata processing · v3.1.0</p>
-            <h1>Sanitize NowPlaying</h1>
-            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.1.0 adds configurable sanitizer rules, text case, a separate output folder and status-bar quick menus, with improved multilingual handling, recovery and diagnostics.</p>
+            <div class="hero-heading">
+                <img class="app-logo" src="assets/SanitizeNowPlaying-logo.png" alt="" width="144" height="144">
+                <div>
+                    <p class="eyebrow">Standalone RDS metadata processing · v3.1.1</p>
+                    <h1>Sanitize NowPlaying</h1>
+                </div>
+            </div>
+            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.1.1 refines rule interactions, RT/RT+ shortening and consistent menu behavior, with matching explanatory help and reliable native tooltips.</p>
             <div class="actions">
-                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.1.0</a>
+                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.1.1</a>
                 <a class="button secondary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying">GitHub repository</a>
             </div>
         </section>
@@ -88,20 +104,21 @@
             </article>
 
             <article class="card wide highlight">
-                <h2>What’s new in v3.1.0</h2>
+                <h2>What’s new in v3.1.1</h2>
                 <ul>
-                    <li>Twelve configurable sanitizer rules and Original, All caps or Capitalize words text case</li>
-                    <li>A separate output folder, or output that follows the input folder</li>
-                    <li>Rules, Chars, Translit, Case and Order quick menus with direct saving and keyboard navigation</li>
-                    <li>Corrected RT/RT+ length budgeting after conversion and improved Vietnamese and Unicode handling</li>
-                    <li>More reliable output recovery, safer settings handling and complete, readable messages</li>
+                    <li>Corrected artist/title recovery and interactions between retained track numbers, metadata labels, guest credits and duplicate cleanup</li>
+                    <li>Safer RT/RT+ shortening, explicit ellipsis and a conservative parenthetical subtitle fallback under length pressure</li>
+                    <li>Matching rule explanations in F10 and quick menus, with consistent mouse and keyboard tooltips</li>
+                    <li>Clearer rule labels and grouping; Translit stays required and its quick menu is disabled in ASCII-safe mode</li>
+                    <li>Unified confirmation/Cancel buttons and separator spacing, folder and file pickers, checkbox/radio styling and Esc navigation</li>
+                    <li>Steadier quick Rules editing and safe F10 closing with Save &amp; exit / Discard changes / Cancel</li>
                 </ul>
-                <p class="note">Defaults retain v3.0.4 behavior: all rules enabled, Original text case and output in the input folder. Existing valid settings load without migration; the six output filenames, delimiter handling and RT+ target syntax are retained.</p>
+                <p class="note">Settings from v3.1.0 remain compatible. All twelve rules still default to On, text case to Original and output to the input folder. The six output filenames, delimiter options and RT+ target formats are retained.</p>
             </article>
 
             <article class="card wide">
                 <h2>v3 continues the v2.1.8 lineage</h2>
-                <p>v3 remains the same product lineage and retains the established output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline for unaffected processing cases. v3.0.1 through v3.0.4 improved metadata preservation, malformed-input handling, responsiveness and regex safety. v3.1.0 adds configurable processing, quick access and independent output destinations with compatible defaults.</p>
+                <p>v3 remains the same product lineage and retains the established output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline for unaffected processing cases. v3.0.1 through v3.0.4 improved metadata preservation, malformed-input handling, responsiveness and regex safety. v3.1.0 added configurable processing, quick access and independent output destinations. v3.1.1 refines processing and the shared menu experience with compatible settings.</p>
             </article>
 
             <article class="card wide">
@@ -129,7 +146,7 @@
             <article class="card">
                 <h2>Metadata handling</h2>
                 <ul>
-                    <li>Twelve selectable cleanup rules and conservative artist/title splitting</li>
+                    <li>Twelve selectable cleanup rules, matching rule explanations and conservative artist/title splitting</li>
                     <li>Metadata-preserving duplicate, country and technical-suffix cleanup</li>
                     <li>Balanced <code>()</code>, <code>[]</code> and <code>{}</code> handling</li>
                     <li>Configurable prefix, connector and delimiter</li>
@@ -155,7 +172,7 @@
 
             <article class="card wide">
                 <h2>Quick start</h2>
-                <p>Download the ZIP, extract it to a writable directory and run <code>SanitizeNowPlaying.exe</code>. On first start, select the input folder used by the playout system. Output follows that folder by default; choose a separate destination in F10 Output settings if needed. Configure the playout software to write artist/title metadata to the selected input file and point the RDS software to the generated RT/RT+ or component files.</p>
+                <p>Download the ZIP, extract it to a writable directory and run <code>SanitizeNowPlaying.exe</code>. On first start, select the input folder used by the playout system. Output follows that folder by default; choose a separate destination in F10 Output settings if needed. Configure the playout software to write artist/title metadata to the selected input file and point the RDS software to the generated RT/RT+ or component files. In F10, Save &amp; exit applies the draft; closing changed settings offers Save &amp; exit, Discard changes or Cancel.</p>
                 <p class="note">The application stores <code>Sanitize-NowPlaying.settings.json</code> next to the executable. Windows 10/11 and .NET Framework 4.8 are required.</p>
             </article>
 
@@ -168,20 +185,21 @@
 
             <article class="card wide">
                 <h2>Release package</h2>
-                <p>Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed. v3.0.0 and later, including v3.1.0, use the proprietary Sanitize NowPlaying license; historical v2.x releases remain under GNU GPLv3.</p>
+                <p>Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed. v3.0.0 and later, including v3.1.1, use the proprietary Sanitize NowPlaying license; historical v2.x releases remain under GNU GPLv3.</p>
                 <p class="note">Developed and reviewed with AI assistance, alongside hands-on design, testing and refinement.</p>
             </article>
 
             <article class="card wide">
                 <h2>License</h2>
-                <p>Sanitize NowPlaying <strong>v3.0.0 and later, including v3.1.0,</strong> is distributed under a <a href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/blob/main/LICENSE">proprietary license</a>. The executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms, and the complete unmodified official binary package may be redistributed subject to the license conditions.</p>
+                <p>Sanitize NowPlaying <strong>v3.0.0 and later, including v3.1.1,</strong> is distributed under a <a href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/blob/main/LICENSE">proprietary license</a>. The executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms, and the complete unmodified official binary package may be redistributed subject to the license conditions.</p>
                 <p class="note"><strong>Legacy note:</strong> historical v2.x releases were published under GNU GPLv3 and remain available under those original terms. The v3 license does not revoke or alter rights previously granted for v2.x.</p>
             </article>
 
 
             <article class="card wide">
                 <h2>Verified on Windows</h2>
-                <p>The complete native v3.1.0 verification run passed on 11 October 2026: 528 processing cases, 35 baseline-parity cases, 59 runtime/settings cases, 35 application-state cases, 33 settings/overlay cases, 28 picker/network cases and 13 stress tests — <strong>731 counted cases with zero failures</strong>. The production build, actual UI and startup/cleanup probes also passed.</p>
+                <p>Native v3.1.1 verification completed on 13 October 2026: 2,181 processing cases, 34 baseline-parity cases, 59 runtime/settings cases, 35 application-state cases, 38 settings/overlay cases, 28 picker/network cases and 13 stress tests — <strong>2,388 counted cases with zero failures</strong>. The production build, full native UI and startup/cleanup probes also passed, including a fresh UI verification after the menu-help refinement.</p>
+                <p class="note">These native results precede the final Save &amp; exit spacing adjustment, which has passed local build and layout checks and awaits a repeat native UI/startup check.</p>
                 <p class="note">The QUICK stress run covered 14,921 simulated operations. Check display scaling, actual network shares and your encoder’s character repertoire in the intended broadcast setup.</p>
             </article>
 
