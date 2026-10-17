@@ -4,34 +4,33 @@
 
 <h1 align="center">Sanitize NowPlaying</h1>
 
-<p align="center"><strong>Current release: v3.1.1</strong> · Windows 10/11 · .NET Framework 4.8</p>
+<p align="center"><strong>Current release: v3.1.2</strong> · Windows 10/11 · .NET Framework 4.8</p>
 
 Standalone Windows application that monitors playout metadata and turns it into clean, predictable RDS RadioText (RT), RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.
 
-Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.1.1** refines sanitizer rule interactions, RT/RT+ shortening and the shared menu experience, building on the configurable processing, independent output folder and quick access introduced in v3.1.0. Existing settings load without migration; the six output filenames and RT+ target formats are retained.
+Sanitize NowPlaying v3.0.0 was the direct successor to **v2.1.8**, the final PowerShell/conhost release. v3 is a complete C# / .NET Framework 4.8 WinForms rewrite. **v3.1.2** adds a saved F9 bypass switch, clearer operating-status feedback and refined footer controls, building on the configurable processing and shared menu experience of v3.1.0/v3.1.1. Bypass defaults to Off, so normal processing remains unchanged. Existing settings load without migration; the six output filenames and RT+ target formats are retained.
 
 Designed for small and semi-professional FM stations that want broadcast-ready RDS metadata without manually retagging an entire music library.
 
 Developed and reviewed with AI assistance, alongside hands-on design, testing and refinement.
 
 
-## What's new in v3.1.1
+## What's new in v3.1.2
 
-- **More reliable rule combinations:** corrected artist/title recovery when track numbers are retained, independent handling of adjacent metadata labels, guest credits and duplicate cleanup
-- **Safer RT/RT+ shortening:** preserved deliberately retained labels, made truncation explicit with an ellipsis, and restored the plain parenthetical subtitle fallback when that lets the complete artist and main title fit
-- **Matching explanatory tooltips** for every rule in F10 and the quick Rules menu, with consistent setting help and reliable mouse/keyboard display
-- **Clearer rule labels and grouping:** Language tags remains distinct from Country & region tags; Redundant artist abbreviations replaces Artist qualifiers
-- **Consistent ASCII-safe behavior:** Translit is required, its quick menu is disabled and the tooltip explains why
-- **Unified dialogs and markers:** matching confirmation/Cancel actions and separator spacing, folder and file selection controls, checkbox/radio contrast and quieter parent frames
-- **Predictable closing and navigation:** pending F10 edits offer Save & exit / Discard changes / Cancel; Esc help consistently distinguishes Close, Back and Cancel
-- **Steadier quick Rules editing** during immediate saves, with expanded regression coverage and successful native Windows verification
+- **F9 Bypass:** temporarily preserve source artist/title text while retaining output order, RT+ formatting and length limits; processing preferences are remembered
+- **Clear bypass status:** fixed-width On/Off button, orange Bypass On text with a subtle active fill, a hover-only frame and a Bypass On indication in the title bar; F9 retains its neutral shortcut colour
+- **Refined footer controls:** clearer spacing and a subtle divider between quick settings and commands, with consistent Tab focus and direct F9 switching that does not move keyboard focus
+- **Gradual last-update colours:** green through five minutes, orange at ten minutes and red at fifteen minutes
+- **Consistent wording:** Initial caps replaces Capitalize words throughout the footer and menus; ASCII-safe keeps its full name
+- **More robust settings:** settings are flushed before atomic replacement, and unknown JSON fields survive saves
+- **Safer startup and release packaging:** rejected additional demo starts leave input/settings untouched; release packaging adds a SHA256 checksum and a compact changelog
 
-Settings from v3.1.0 remain compatible. All twelve rules still default to On, text case to Original and output to the input folder. The six output filenames, delimiter options and RT+ target formats are retained.
+Settings from v3.1.1 remain compatible. Bypass defaults to Off, all twelve rules to On, text case to Original and output to the input folder. The six output filenames, delimiter options and RT+ target formats are retained.
 
 
 ## Capabilities introduced in v3.1.0
 
-- Twelve configurable sanitizer rules and Original, All caps or Capitalize words text case
+- Twelve configurable sanitizer rules and Original, All caps or Initial caps text case
 - An independent output folder, or output that follows the input folder
 - Five quick menus: Rules, Chars, Translit, Case and Order, with direct saving and keyboard navigation
 - Improved multilingual handling, output recovery, settings diagnostics and folder/file status reporting
@@ -56,6 +55,8 @@ Settings from v3.1.0 remain compatible. All twelve rules still default to On, te
 
 ## Metadata processing
 
+The following applies to normal processing (Bypass Off, the default). Initial caps gives each word an initial capital, for example `my song` → `My Song`.
+
 - Intelligent artist/title cleanup for encoders, bitrates, country/year suffixes, platform tags, duplicate information and other common library noise, with twelve independently selectable rules
 - Preservation-first handling for ambiguous country codes, natural hyphenation and technical/version tails
 - Conservative artist/title splitting
@@ -65,7 +66,7 @@ Settings from v3.1.0 remain compatible. All twelve rules still default to On, te
 - Configurable connector text
 - Configurable playout delimiter, including U+241F, TAB and custom values
 - Optional Greek/Cyrillic transliteration; ASCII-safe mode requires transliteration
-- Original, All caps or Capitalize words text case
+- Original, All caps or Initial caps text case
 - NFC normalization and improved handling of Vietnamese, combining accents and additional Unicode letters
 - Independent 64-character artist/title component limits
 - Adaptive trimming of combined RT/RT+ content after conversion, within the existing 64-character budget and without splitting supported letter/accent sequences
@@ -79,9 +80,9 @@ All output files are written as UTF-8 without BOM in the selected **output folde
 | File | Contents |
 | --- | --- |
 | `prefix.txt` | Selected multilingual prefix or custom prefix text, or empty |
-| `artist.txt` | Sanitized artist, independently limited to 64 characters, or empty |
+| `artist.txt` | Artist text, sanitized normally or preserved in bypass, independently limited to 64 characters, or empty |
 | `connector.txt` | Configured connector when both artist and title are present, or empty |
-| `title.txt` | Sanitized title, independently limited to 64 characters, or empty |
+| `title.txt` | Title text, sanitized normally or preserved in bypass, independently limited to 64 characters, or empty |
 | `nowplaying_rt.txt` | Compact combined RadioText in the configured artist/title order, or empty |
 | `nowplaying_rtplus.txt` | Compact RT+ output in the selected target syntax, or empty |
 
@@ -95,7 +96,7 @@ The component files keep fixed semantic identities: `artist.txt` always contains
 - Windows 10 or Windows 11
 - .NET Framework 4.8
 
-The application is built as AnyCPU.
+The application is built as AnyCPU. The executable is not digitally signed; Windows SmartScreen or organisational policy may require approval before it can run. A release ZIP's SHA256 checksum checks integrity and is not a digital signature.
 
 `Sanitize-NowPlaying.settings.json` is stored next to `SanitizeNowPlaying.exe`, so run the application from a directory in which the current user has write permission.
 
@@ -110,7 +111,7 @@ The application is built as AnyCPU.
 6. Open **F10 Settings** to configure the input/output folders, input filename, sanitizer rules, text case, prefix, artist/title order, connector, character set, transliteration, delimiter or RT+ output target. **Save & exit** applies the draft. Closing unchanged settings returns directly; with pending edits, choose **Save & exit**, **Discard changes** or **Cancel**.
 7. Configure Stereo Tool, Magic RDS 4 or another RDS application to read the ready-made RT/RT+ file or the separate component files required by your workflow.
 
-The **Rules, Chars, Translit, Case and Order** fields at the bottom offer quick access. Rules stays open for successive immediately saved changes; single-choice menus close after a successful selection. Tab/Shift+Tab moves footer focus, Enter/Space opens a menu, Up/Down moves choices and Left/Right switches between quick menus. Esc dismisses the popup without undoing successfully saved quick changes. In ASCII-safe mode, Translit is required: its quick menu is unavailable, keyboard navigation skips it and the tooltip explains the forced setting.
+The **Rules, Chars, Translit, Case and Order** fields share the bottom row with **F9 Bypass**, **F10 Settings** and **Alt+F4 Exit**. The fields offer quick access while normal processing is active. Rules stays open for successive immediately saved changes; single-choice menus close after a successful selection. Tab/Shift+Tab moves footer focus, Enter/Space opens a menu, Up/Down moves choices and Left/Right switches between quick menus. Esc dismisses the popup without undoing successfully saved quick changes. In ASCII-safe mode, Translit is required: its quick menu is unavailable, keyboard navigation skips it and the tooltip explains the forced setting.
 
 Folder selection requires **Use this folder**. In both Input file pickers, clicking a filename only selects it; **Use this file**, U or Enter confirms it. **Cancel** discards the current unconfirmed choice.
 
@@ -125,6 +126,17 @@ Initial setup follows the same picker/editor conventions. Cancel in its root abo
 When using the recommended U+241F separator, a typical playout metadata format is:
 
     %artist␟%title
+
+
+## Bypass and operating status
+
+Press **F9**, click the Bypass button, or use Tab followed by Enter/Space to switch bypass. **On/Off describes the current mode**. Bypass is saved; a saved On setting remains On after restart. A failed save leaves the active mode unchanged.
+
+While bypass is On, **Rules, Chars, Translit and Case** are suspended and their controls are disabled. Their preferences are retained; turning bypass Off immediately reprocesses the current input with those choices. Artist/title order and RT+ target formatting remain active. Source text is preserved within the existing length and target-syntax limits, with simple left-to-right clipping and an ellipsis when needed. Bypass does not replay expired or unavailable input. Check that the encoder supports any preserved Unicode characters.
+
+The fixed-width button shows **Bypass On** in orange on a subtle neutral fill. F9 retains its normal shortcut colour; the button frame appears only on hover. Tab focus has its own separate dotted outline. The title bar adds **— Bypass On**, including while the F10 menu is open. F9 works on the main screen and in quick menus; it does not toggle bypass behind modal settings or confirmation dialogs. Holding F9 toggles only once per press.
+
+The last-update timestamp and elapsed-time indicator remain green through **5:00**, gradually reach orange at **10:00** and red at **15:00**, and return to green after a new good output update. Input expiration and file/folder health retain their separate status reporting.
 
 
 ## Stereo Tool component example
@@ -151,11 +163,11 @@ The application log is available at `%LOCALAPPDATA%\Sanitize NowPlaying\Sanitize
 
 ## Release lineage
 
-**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** reduced the artist-only quiet period and refined status/contrast presentation. **v3.0.4** adds focused sanitizer correctness, Unicode/entity consistency and regex-safety hardening while retaining the same settings schema, output filenames and file-interface contract. **v3.1.0** added configurable sanitizer rules, text case, separate output destinations and quick access. **v3.1.1** refines rule interactions, length handling, explanatory help and consistent dialog/navigation behavior while retaining settings compatibility and the established file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
+**v3.0.0** established the C# / WinForms generation as a continuation of the existing project rather than a separate product. **v3.0.1** added conservative metadata-preservation hardening. **v3.0.2** strengthened malformed-input handling, decoding, RT+ escaping, worker recovery and diagnostics. **v3.0.3** reduced the artist-only quiet period and refined status/contrast presentation. **v3.0.4** adds focused sanitizer correctness, Unicode/entity consistency and regex-safety hardening while retaining the same settings schema, output filenames and file-interface contract. **v3.1.0** added configurable sanitizer rules, text case, separate output destinations and quick access. **v3.1.1** refined rule interactions, length handling, explanatory help and consistent dialog/navigation behavior. **v3.1.2** adds bypass control, clearer status feedback, footer refinements and more robust settings persistence while retaining the established file-interface contract. PowerShell/conhost **v2.1.8** remains the compatibility baseline for unaffected processing cases.
 
 For users of v2.1.8, the important continuity points are:
 
-- existing valid settings load without migration; v3.1.0 added optional fields with compatible defaults, retained by v3.1.1;
+- existing valid settings load without migration; v3.1.0 added optional fields with compatible defaults, retained by v3.1.1/v3.1.2;
 - existing output filenames retained;
 - unaffected baseline processing cases remain parity-tested against v2.1.8;
 - `nowplaying.txt` remains the default input filename;
@@ -168,7 +180,7 @@ Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 sourc
 
 ## License
 
-Sanitize NowPlaying **v3.0.0 and later, including v3.1.1,** is distributed under the proprietary [Sanitize NowPlaying license](LICENSE). Include the license with the official binary package.
+Sanitize NowPlaying **v3.0.0 and later, including v3.1.2,** is distributed under the proprietary [Sanitize NowPlaying license](LICENSE). Include the license with the official binary package.
 
 The v3 executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms. The complete, unmodified official binary package may also be redistributed subject to the license conditions.
 
@@ -179,20 +191,22 @@ The v3 source code is not publicly distributed.
 
 ## Verification
 
-Native Windows verification for v3.1.1 completed successfully on **13 October 2026**. The automated release chain passed, and the menu-help revision subsequently passed a fresh production build, full UI probe and startup/cleanup verification:
+A complete native Windows v3.1.2 verification run passed on **16 October 2026**:
 
 | Suite | Passed | Failed |
 | --- | ---: | ---: |
-| Processing engine | 2,181 | 0 |
+| Processing engine | 2,831 | 0 |
 | PowerShell v2.1.8 baseline parity, six fields per case | 34 | 0 |
-| Runtime/settings/file I/O | 59 | 0 |
-| Application state | 35 | 0 |
+| Runtime/settings/file I/O | 62 | 0 |
+| Application state | 36 | 0 |
 | Settings/overlay | 38 | 0 |
 | Picker/network/burn-in | 28 | 0 |
 | Accelerated stress/soak | 13 | 0 |
-| **Total counted cases** | **2,388** | **0** |
+| **Total counted cases** | **3,042** | **0** |
 
-The production build, actual UI probes and startup/cleanup probes also passed. The QUICK stress run completed **14,921 simulated operations** with zero transient read retries. Coverage includes rule-combination interactions, RT/RT+ field consistency, quick-save rollback/retry, actual native mouse/keyboard tooltips, folder permissions and recovery, checkbox/radio rendering, navigation, multilingual text and complete wrapped/scrollable messages. The UI and startup probes are additional to the counted cases above. These native results precede the final Save & exit spacing adjustment, which has passed local build and layout checks and awaits a repeat native UI/startup check.
+The production build, full native UI probe and startup/cleanup probes also passed. The QUICK stress run completed **14,921 simulated operations**. UI coverage includes all 144 footer setting combinations, F9/Tab focus behavior, native tooltips, dialogs and measured startup width.
+
+The final bypass appearance and title-bar refinements passed local build and targeted UI checks, including saved On/Off startup, failed-save handling and unchanged F10/Save & exit rendering. **A fresh native Windows UI/startup check remains outstanding for those final refinements.** The counted native results above precede that presentation-only change.
 
 Display scaling, actual network shares and the encoder's character repertoire remain deployment-specific checks. Single-instance protection is per Windows logon session; use one writer per output folder. Output files are individually atomic, not atomic as a six-file set.
 

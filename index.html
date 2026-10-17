@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="BqP9RSQfLQiSCL0kyj5hCiTWCxZPS0T6amfjk4WEgzQ" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanitize NowPlaying v3.1.1 — RDS metadata sanitizer for Windows</title>
-    <meta name="description" content="Sanitize NowPlaying v3.1.1 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
+    <title>Sanitize NowPlaying v3.1.2 — RDS metadata sanitizer for Windows</title>
+    <meta name="description" content="Sanitize NowPlaying v3.1.2 is a standalone Windows application that converts playout metadata into clean RDS RadioText, RT+ and separate component files for Stereo Tool, Magic RDS 4 and other file-based RDS workflows.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://spiderblocker.github.io/Sanitize_NowPlaying/">
-    <meta property="og:title" content="Sanitize NowPlaying v3.1.1">
+    <meta property="og:title" content="Sanitize NowPlaying v3.1.2">
     <meta property="og:description" content="Standalone Windows metadata sanitizer for clean RDS RadioText, RT+ and component output files.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://spiderblocker.github.io/Sanitize_NowPlaying/">
@@ -20,7 +20,7 @@
     <meta name="twitter:image" content="https://spiderblocker.github.io/Sanitize_NowPlaying/assets/SanitizeNowPlaying-logo.png">
     <meta name="twitter:image:alt" content="Sanitize NowPlaying logo">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Sanitize NowPlaying v3.1.1">
+    <meta name="twitter:title" content="Sanitize NowPlaying v3.1.2">
     <meta name="twitter:description" content="Standalone Windows application for clean RDS RadioText, RT+ and component output files.">
     <script type="application/ld+json">
     {
@@ -31,7 +31,7 @@
       "url": "https://spiderblocker.github.io/Sanitize_NowPlaying/",
       "downloadUrl": "https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip",
       "description": "Standalone Windows application that monitors playout metadata and writes clean RT, RT+ and separate prefix, artist, connector and title files for file-based RDS workflows.",
-      "softwareVersion": "3.1.1",
+      "softwareVersion": "3.1.2",
       "applicationCategory": "MultimediaApplication",
       "operatingSystem": "Windows 10, Windows 11",
       "author": { "@type": "Person", "name": "Loenie" },
@@ -76,13 +76,13 @@
             <div class="hero-heading">
                 <img class="app-logo" src="assets/SanitizeNowPlaying-logo.png" alt="" width="144" height="144">
                 <div>
-                    <p class="eyebrow">Standalone RDS metadata processing · v3.1.1</p>
+                    <p class="eyebrow">Standalone RDS metadata processing · v3.1.2</p>
                     <h1>Sanitize NowPlaying</h1>
                 </div>
             </div>
-            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.1.1 refines rule interactions, RT/RT+ shortening and consistent menu behavior, with matching explanatory help and reliable native tooltips.</p>
+            <p class="lead">A standalone Windows 10/11 application that monitors playout metadata and transforms noisy artist/title text into clean, predictable RDS RadioText, RT+ and separate prefix, artist, connector and title output files. v3.1.2 adds F9 bypass control, clearer operating-status feedback, refined footer controls and more robust settings saving. Bypass defaults to Off, retaining normal processing.</p>
             <div class="actions">
-                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.1.1</a>
+                <a class="button primary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/raw/main/SanitizeNowPlaying.zip">Download v3.1.2</a>
                 <a class="button secondary" href="https://github.com/SpiderBlocker/Sanitize_NowPlaying">GitHub repository</a>
             </div>
         </section>
@@ -100,32 +100,33 @@
 
             <article class="card">
                 <h2>Standalone WinForms UI</h2>
-                <p>No PowerShell or console host is required. The graphical v3 interface provides live status, five quick menus, an F10 Settings overlay, draggable nested menus, folder selection and first-run setup.</p>
+                <p>No PowerShell or console host is required. The graphical v3 interface provides live status, five quick menus, F9 bypass switching, an F10 Settings overlay, draggable nested menus, folder selection and first-run setup.</p>
             </article>
 
             <article class="card wide highlight">
-                <h2>What’s new in v3.1.1</h2>
+                <h2>What’s new in v3.1.2</h2>
                 <ul>
-                    <li>Corrected artist/title recovery and interactions between retained track numbers, metadata labels, guest credits and duplicate cleanup</li>
-                    <li>Safer RT/RT+ shortening, explicit ellipsis and a conservative parenthetical subtitle fallback under length pressure</li>
-                    <li>Matching rule explanations in F10 and quick menus, with consistent mouse and keyboard tooltips</li>
-                    <li>Clearer rule labels and grouping; Translit stays required and its quick menu is disabled in ASCII-safe mode</li>
-                    <li>Unified confirmation/Cancel buttons and separator spacing, folder and file pickers, checkbox/radio styling and Esc navigation</li>
-                    <li>Steadier quick Rules editing and safe F10 closing with Save &amp; exit / Discard changes / Cancel</li>
+                    <li>Saved F9 Bypass switch preserves source artist/title text while keeping output order, RT+ formatting and length limits</li>
+                    <li>Clear On/Off status, an orange Bypass On label with a subtle active fill, a hover-only frame and a title-bar indication; F9 stays neutral</li>
+                    <li>Clearer spacing and a subtle divider between quick settings and commands, with consistent keyboard focus</li>
+                    <li>Gradual last-update colours: green through five minutes, orange at ten minutes and red at fifteen minutes</li>
+                    <li>Initial caps replaces Capitalize words throughout the UI; ASCII-safe keeps its full name</li>
+                    <li>More robust settings saves preserve unknown JSON fields and flush before atomic replacement</li>
+                    <li>Rejected additional demo starts leave input/settings untouched; release packaging adds a SHA256 checksum and compact changelog</li>
                 </ul>
-                <p class="note">Settings from v3.1.0 remain compatible. All twelve rules still default to On, text case to Original and output to the input folder. The six output filenames, delimiter options and RT+ target formats are retained.</p>
+                <p class="note">Settings from v3.1.1 remain compatible. Bypass defaults to Off, all twelve rules to On, text case to Original and output to the input folder. The six output filenames, delimiter options and RT+ target formats are retained.</p>
             </article>
 
             <article class="card wide">
                 <h2>v3 continues the v2.1.8 lineage</h2>
-                <p>v3 remains the same product lineage and retains the established output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline for unaffected processing cases. v3.0.1 through v3.0.4 improved metadata preservation, malformed-input handling, responsiveness and regex safety. v3.1.0 added configurable processing, quick access and independent output destinations. v3.1.1 refines processing and the shared menu experience with compatible settings.</p>
+                <p>v3 remains the same product lineage and retains the established output filenames and file-interface contract. The final PowerShell v2.1.8 release remains the compatibility baseline for unaffected processing cases. v3.0.1 through v3.0.4 improved metadata preservation, malformed-input handling, responsiveness and regex safety. v3.1.0 added configurable processing, quick access and independent output destinations. v3.1.1 refined processing and the shared menu experience. v3.1.2 adds bypass control, clearer status feedback and more robust settings persistence, retaining compatible settings and the existing output formats.</p>
             </article>
 
             <article class="card wide">
                 <h2>Typical signal path</h2>
                 <div class="flow">
                     <div class="step"><strong>1. Playout software</strong>Writes artist/title metadata to the configured input file; <code>nowplaying.txt</code> remains the default.</div>
-                    <div class="step"><strong>2. Sanitize NowPlaying</strong>Normalizes text, removes metadata noise and applies the selected presentation settings.</div>
+                    <div class="step"><strong>2. Sanitize NowPlaying</strong>Cleans metadata using the selected settings, or preserves source text within output limits when bypass is On.</div>
                     <div class="step"><strong>3. Output files</strong>Writes ready-made RT/RT+ plus separate prefix, artist, connector and title files.</div>
                     <div class="step"><strong>4. RDS software</strong>Stereo Tool, Magic RDS 4 or another workflow reads the complete outputs or component files.</div>
                 </div>
@@ -138,20 +139,21 @@
                     <li>Startup freshness handling</li>
                     <li>Atomic writes and automatic retries</li>
                     <li>Single-instance protection per Windows logon session</li>
-                    <li>Fail-safe settings commits</li>
+                    <li>Settings flushed before atomic replacement, with unknown JSON fields retained</li>
                     <li>Confirmed shutdown with bounded, best-effort output clearing</li>
                 </ul>
             </article>
 
             <article class="card">
                 <h2>Metadata handling</h2>
+                <p class="note">Normal processing; Bypass Off is the default.</p>
                 <ul>
                     <li>Twelve selectable cleanup rules, matching rule explanations and conservative artist/title splitting</li>
                     <li>Metadata-preserving duplicate, country and technical-suffix cleanup</li>
                     <li>Balanced <code>()</code>, <code>[]</code> and <code>{}</code> handling</li>
                     <li>Configurable prefix, connector and delimiter</li>
                     <li>Optional Greek/Cyrillic transliteration; required in ASCII-safe mode</li>
-                    <li>Original, All caps or Capitalize words text case</li>
+                    <li>Original, All caps or Initial caps text case</li>
                     <li>Independent 64-character artist/title limits</li>
                     <li>RT/RT+ trimming after conversion, preserving supported letter/accent sequences</li>
                 </ul>
@@ -173,7 +175,14 @@
             <article class="card wide">
                 <h2>Quick start</h2>
                 <p>Download the ZIP, extract it to a writable directory and run <code>SanitizeNowPlaying.exe</code>. On first start, select the input folder used by the playout system. Output follows that folder by default; choose a separate destination in F10 Output settings if needed. Configure the playout software to write artist/title metadata to the selected input file and point the RDS software to the generated RT/RT+ or component files. In F10, Save &amp; exit applies the draft; closing changed settings offers Save &amp; exit, Discard changes or Cancel.</p>
-                <p class="note">The application stores <code>Sanitize-NowPlaying.settings.json</code> next to the executable. Windows 10/11 and .NET Framework 4.8 are required.</p>
+                <p class="note">The application stores <code>Sanitize-NowPlaying.settings.json</code> next to the executable. Windows 10/11 and .NET Framework 4.8 are required. The EXE is not digitally signed; SmartScreen or organisational policy may require approval.</p>
+            </article>
+
+            <article class="card wide">
+                <h2>Bypass and operating status</h2>
+                <p>Press <strong>F9</strong>, click Bypass or use Tab followed by Enter/Space to switch modes. On/Off describes the current mode and is saved across restarts. Bypass suspends Rules, Chars, Translit and Case while retaining your preferences. Turning it Off immediately restores normal processing. Output order, RT+ formatting, length limits and input/file health handling remain active.</p>
+                <p>While active, <strong>Bypass On</strong> is orange on a subtle neutral fill, and the title bar adds <strong>— Bypass On</strong>. F9 stays neutral, the frame appears only on hover and Tab focus has a separate dotted outline. F9 works on the main screen and in quick menus; it leaves modal settings and confirmation dialogs untouched.</p>
+                <p class="note">Last-update indicators stay green through 5:00, gradually reach orange at 10:00 and red at 15:00, and return to green after a new good output update. Check your encoder’s character repertoire when bypass preserves Unicode text.</p>
             </article>
 
             <article class="card wide">
@@ -185,22 +194,23 @@
 
             <article class="card wide">
                 <h2>Release package</h2>
-                <p>Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed. v3.0.0 and later, including v3.1.1, use the proprietary Sanitize NowPlaying license; historical v2.x releases remain under GNU GPLv3.</p>
+                <p>Sanitize NowPlaying v3 is distributed as prebuilt Windows software. The v3 source code is not publicly distributed. v3.0.0 and later, including v3.1.2, use the proprietary Sanitize NowPlaying license; historical v2.x releases remain under GNU GPLv3.</p>
+                <p>Release packaging produces a compact changelog and a SHA256 checksum alongside the ZIP. The checksum checks integrity; it is not a digital signature.</p>
                 <p class="note">Developed and reviewed with AI assistance, alongside hands-on design, testing and refinement.</p>
             </article>
 
             <article class="card wide">
                 <h2>License</h2>
-                <p>Sanitize NowPlaying <strong>v3.0.0 and later, including v3.1.1,</strong> is distributed under a <a href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/blob/main/LICENSE">proprietary license</a>. The executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms, and the complete unmodified official binary package may be redistributed subject to the license conditions.</p>
+                <p>Sanitize NowPlaying <strong>v3.0.0 and later, including v3.1.2,</strong> is distributed under a <a href="https://github.com/SpiderBlocker/Sanitize_NowPlaying/blob/main/LICENSE">proprietary license</a>. The executable may be used for private, commercial, broadcast, educational and organizational purposes under those terms, and the complete unmodified official binary package may be redistributed subject to the license conditions.</p>
                 <p class="note"><strong>Legacy note:</strong> historical v2.x releases were published under GNU GPLv3 and remain available under those original terms. The v3 license does not revoke or alter rights previously granted for v2.x.</p>
             </article>
 
 
             <article class="card wide">
-                <h2>Verified on Windows</h2>
-                <p>Native v3.1.1 verification completed on 13 October 2026: 2,181 processing cases, 34 baseline-parity cases, 59 runtime/settings cases, 35 application-state cases, 38 settings/overlay cases, 28 picker/network cases and 13 stress tests — <strong>2,388 counted cases with zero failures</strong>. The production build, full native UI and startup/cleanup probes also passed, including a fresh UI verification after the menu-help refinement.</p>
-                <p class="note">These native results precede the final Save &amp; exit spacing adjustment, which has passed local build and layout checks and awaits a repeat native UI/startup check.</p>
-                <p class="note">The QUICK stress run covered 14,921 simulated operations. Check display scaling, actual network shares and your encoder’s character repertoire in the intended broadcast setup.</p>
+                <h2>Verification</h2>
+                <p>A complete native Windows v3.1.2 run passed on 16 October 2026: 2,831 processing cases, 34 baseline-parity cases, 62 runtime/settings cases, 36 application-state cases, 38 settings/overlay cases, 28 picker/network cases and 13 stress tests — <strong>3,042 counted cases with zero failures</strong>. The production build, full native UI and startup/cleanup probes also passed, including all 144 footer setting combinations.</p>
+                <p class="note">The final bypass appearance and title-bar refinements passed local build and targeted UI checks. A fresh native Windows UI/startup check remains outstanding for those final refinements; the native results above precede that presentation-only change.</p>
+                <p class="note">The QUICK stress run covered 14,921 simulated operations. Check display scaling, actual network shares and your encoder’s character repertoire in the intended broadcast setup. Single-instance protection is per Windows logon session; use one writer per output folder.</p>
             </article>
 
             <article class="card wide">
